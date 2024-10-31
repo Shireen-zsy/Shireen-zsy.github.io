@@ -1,0 +1,24 @@
+---
+title: "Shiyu Zhang"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+---
+
+# Welcome to my web!!!
+
+<image src = "./shiyuzhang.jpg" style = "width:40%; float:left; margin-right:30px;">
+
+<p style = "text-align: justify; font-size: 18px; max-width: 900px;">
+Hello everyone! My name is Shiyu Zhang, and I am currently a first-year Master’s student in Biostatistics at Columbia University’s Mailman School of Public Health, specializing in Public Health Data Science. I completed my undergraduate studies at Peking University, where I majored in Pharmaceutical Science.
+
+My academic journey from pharmaceutical science to biostatistics reflects my strong interest in applying data science to public health, particularly in researching colorectal and lung cancer. I am passionate about using statistical methods to analyze health data, uncover insights, and contribute to better health outcomes.
+
+Outside of academics, I enjoy playing badminton and have a deep appreciation for traditional Chinese music—I also play a few traditional Chinese musical instruments. I’m excited to learn, grow, and make meaningful contributions to the field of public health!
+</p>
+
+
+
+If you like to learn more about me, visit [this page](about.html)

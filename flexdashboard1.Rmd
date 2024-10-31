@@ -1,0 +1,109 @@
+---
+title: "flexdashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+
+```{r, message= FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+library(crosstalk)
+```
+
+
+
+```{r}
+data("ny_noaa")
+ny_noaa = 
+  data.frame(ny_noaa) |> 
+  janitor::clean_names() |> 
+  filter(!is.na(prcp), !is.na(tmax), !is.na(tmin)) |> 
+  mutate(
+    year = year(date),
+    month = month(date),
+    day = day(date),
+    across(c(year, month, day, prcp, snow, snwd, tmin, tmax), as.numeric),
+    prcp = prcp / 10,
+    tmax = tmax / 10,
+    tmin = tmin / 10
+  ) 
+
+set.seed(123) 
+ny_noaa_sampled = ny_noaa |> 
+  group_by(year) |> 
+  slice_sample(n = 50) 
+```
+
+
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+ny_noaa_sampled |> 
+  mutate(
+    text_label = paste(
+      "ID: ", id, 
+      "<br>Year: ", ifelse(is.na(year), "Unknown", year),
+      "<br>Precipitation: ", ifelse(is.na(prcp), "Unknown", prcp), " mm", 
+      "<br>Max Temperature: ", ifelse(is.na(tmax), "Unknown", tmax), "C"
+    )
+  ) |> 
+  plot_ly(x = ~prcp, y = ~tmax, 
+          type = 'scatter', mode = 'markers', 
+          color = ~tmax,
+          text = ~text_label, hoverinfo = 'text') |> 
+  layout(title = "Scatterplot of Precipitation vs. Max Temperature",
+         xaxis = list(title = "Precipitation (mm)"),
+         yaxis = list(title = "Max Temperature (C)"))
+```
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+
+```{r, warning = FALSE}
+ny_noaa_sampled |> 
+  plot_ly(x = ~factor(year), y = ~tmax, type = 'box', color = ~factor(year))  |> 
+  layout(title = "Boxplot of Max Temperature by Year",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Max Temperature (C)"))
+
+```
+
+
+### Chart C
+
+```{r}
+
+annual_df = 
+  ny_noaa_sampled |> 
+  group_by(year) |> 
+  summarise(
+    avg_tmax = mean(tmax, na.rm = TRUE),
+    total_prcp = sum(prcp, na.rm = TRUE)
+  )
+
+annual_df |> 
+  plot_ly() |> 
+  add_trace(x = ~year, y = ~avg_tmax, type = 'scatter', mode = 'lines', name = 'Avg Max Temperature', yaxis = 'y1') |> 
+  add_trace(x = ~year, y = ~total_prcp, type = 'bar', name = 'Total Precipitation', yaxis = 'y2', marker = list(
+    color = ~total_prcp, colorscale = "Viridis",opacity = 0.7)) |> 
+  layout(title = "Annual Avg Max Temperature and Total Precipitation",
+         xaxis = list(title = "Year"),
+         yaxis = list(title = "Avg Max Temperature (C)", side = "left"),
+         yaxis2 = list(title = "Total Precipitation (mm)", side = "right", overlaying = "y"))
+```
+
+
