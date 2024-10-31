@@ -11,7 +11,7 @@ navbar:
     - icon: fa-envelope fa-lg
       href: mailto:<sz3319@cumc.columbia.edu>
     - icon: fa-github fa-lg
-      href: http://github.com/Shireen-zsy/ShiyuZhang_sz3319_github.io/
+      href: https://github.com/Shireen-zsy/Shireen-zsy.github.io.git/
 output:
   html_document:
     theme: flatly
